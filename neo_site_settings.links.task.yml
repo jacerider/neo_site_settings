@@ -1,0 +1,25 @@
+entity.neo_site_settings:
+  deriver: Drupal\neo_site_settings\Plugin\Derivative\SiteSettingsTasksDeriver
+
+entity.neo_site_settings.collection:
+  title: 'Settings'
+  route_name: entity.neo_site_settings.collection
+  base_route: entity.neo_site_settings.collection
+  icon: cog
+
+entity.neo_site_settings_type.collection:
+  route_name: entity.neo_site_settings_type.collection
+  base_route: entity.neo_site_settings.collection
+  title: 'Manage'
+  weight: 1000
+  icon: tools
+
+entity.neo_site_settings_type.edit_form:
+  title: 'Edit'
+  route_name: entity.neo_site_settings_type.edit_form
+  base_route: entity.neo_site_settings_type.edit_form
+
+# entity.neo_site_settings_type.collection:
+#   title: 'List'
+#   route_name: entity.neo_site_settings_type.collection
+#   base_route: entity.neo_site_settings_type.collection

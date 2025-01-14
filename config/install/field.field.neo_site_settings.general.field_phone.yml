@@ -1,0 +1,27 @@
+uuid: c1f14e0d-8425-4b89-bb14-bbbb2f0547f6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.neo_site_settings.field_phone
+    - neo_site_settings.neo_site_settings_type.general
+  module:
+    - neo_site_settings
+    - telephone
+third_party_settings:
+  neo_site_settings:
+    config_name: ''
+    config_key: ''
+    config_delimiter: ''
+id: neo_site_settings.general.field_phone
+field_name: field_phone
+entity_type: neo_site_settings
+bundle: general
+label: Phone
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: telephone

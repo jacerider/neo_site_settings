@@ -1,0 +1,19 @@
+uuid: 9147d4fa-4f3c-44e3-a9cd-46d255ca56aa
+langcode: en
+status: true
+dependencies:
+  module:
+    - link
+    - neo_site_settings
+id: neo_site_settings.field_linkedin
+field_name: field_linkedin
+entity_type: neo_site_settings
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

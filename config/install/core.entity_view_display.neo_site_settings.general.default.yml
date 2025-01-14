@@ -1,0 +1,60 @@
+uuid: 784d0133-d051-4bd7-94c0-5c9e969c90ac
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.neo_site_settings.general.field_address
+    - field.field.neo_site_settings.general.field_copyright
+    - field.field.neo_site_settings.general.field_email
+    - field.field.neo_site_settings.general.field_name
+    - field.field.neo_site_settings.general.field_phone
+    - neo_site_settings.neo_site_settings_type.general
+  module:
+    - telephone
+_core:
+  default_config_hash: FnrAtO78bcqLhbQ2n90nM4hQ8MDFPWaGTC99IBMY3Kw
+id: neo_site_settings.general.default
+targetEntityType: neo_site_settings
+bundle: general
+mode: default
+content:
+  field_address:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_copyright:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_email:
+    type: email_mailto
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_name:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_phone:
+    type: telephone_link
+    label: hidden
+    settings:
+      title: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+hidden:
+  search_api_excerpt: true

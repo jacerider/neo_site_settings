@@ -1,0 +1,10 @@
+permission_callbacks:
+  - Drupal\neo_site_settings\SiteSettingsPermissions::permissions
+
+administer neo_site_settings:
+  title: 'Administer site settings'
+  description: 'Allow to access the administration form to configure config pages.'
+  restrict access: true
+
+edit all neo_site_settings:
+  title: 'Edit all site settings'

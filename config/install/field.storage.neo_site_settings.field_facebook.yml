@@ -1,0 +1,19 @@
+uuid: 3f158c6d-1397-45a6-943f-4720108499c6
+langcode: en
+status: true
+dependencies:
+  module:
+    - link
+    - neo_site_settings
+id: neo_site_settings.field_facebook
+field_name: field_facebook
+entity_type: neo_site_settings
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

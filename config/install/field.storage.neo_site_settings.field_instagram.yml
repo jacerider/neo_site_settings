@@ -1,0 +1,19 @@
+uuid: b8ed069a-e4ba-4843-8db1-67733e603d15
+langcode: en
+status: true
+dependencies:
+  module:
+    - link
+    - neo_site_settings
+id: neo_site_settings.field_instagram
+field_name: field_instagram
+entity_type: neo_site_settings
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,5 @@
+neo_site_settings.type_add:
+  title: 'Add Settings Type'
+  route_name: entity.neo_site_settings_type.add_form
+  appears_on:
+    - entity.neo_site_settings_type.collection

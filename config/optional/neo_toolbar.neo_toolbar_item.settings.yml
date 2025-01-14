@@ -1,0 +1,21 @@
+uuid: 1ad0e611-ffd4-4a6f-b915-99c2f4abbcc9
+langcode: en
+status: true
+dependencies:
+  config:
+    - neo_toolbar.neo_toolbar.default
+id: settings
+label: Settings
+toolbar: default
+region: side_end
+plugin: link
+weight: -1
+settings:
+  url: 'internal:/admin/settings'
+  token:
+    tokens: ''
+  target: 0
+  icon: cog
+  badge:
+    type: ''
+visibility: {  }

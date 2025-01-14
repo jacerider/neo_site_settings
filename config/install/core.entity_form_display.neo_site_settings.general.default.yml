@@ -1,0 +1,58 @@
+uuid: 06be9db0-f02f-4ed8-9e0d-b8007e95910e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.neo_site_settings.general.field_address
+    - field.field.neo_site_settings.general.field_copyright
+    - field.field.neo_site_settings.general.field_email
+    - field.field.neo_site_settings.general.field_name
+    - field.field.neo_site_settings.general.field_phone
+    - neo_site_settings.neo_site_settings_type.general
+  module:
+    - telephone
+id: neo_site_settings.general.default
+targetEntityType: neo_site_settings
+bundle: general
+mode: default
+content:
+  field_address:
+    type: string_textarea
+    weight: 3
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_copyright:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_email:
+    type: email_default
+    weight: 1
+    region: content
+    settings:
+      placeholder: ''
+      size: 60
+    third_party_settings: {  }
+  field_name:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_phone:
+    type: telephone_default
+    weight: 2
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

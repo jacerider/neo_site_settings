@@ -1,0 +1,21 @@
+uuid: 557fbd73-aa72-4b02-81f5-a28659e8e73a
+langcode: en
+status: true
+dependencies:
+  module:
+    - neo_site_settings
+id: neo_site_settings.field_copyright
+field_name: field_copyright
+entity_type: neo_site_settings
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,68 @@
+uuid: 57cea5ba-37cb-4947-9e88-b4d5aa4df959
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.neo_site_settings.social.field_facebook
+    - field.field.neo_site_settings.social.field_instagram
+    - field.field.neo_site_settings.social.field_linkedin
+    - field.field.neo_site_settings.social.field_pinterest
+    - field.field.neo_site_settings.social.field_x
+    - field.field.neo_site_settings.social.field_youtube
+    - neo_site_settings.neo_site_settings_type.social
+  module:
+    - link
+id: neo_site_settings.social.default
+targetEntityType: neo_site_settings
+bundle: social
+mode: default
+content:
+  field_facebook:
+    type: link_default
+    weight: 0
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_instagram:
+    type: link_default
+    weight: 2
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_linkedin:
+    type: link_default
+    weight: 3
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_pinterest:
+    type: link_default
+    weight: 4
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_x:
+    type: link_default
+    weight: 1
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_youtube:
+    type: link_default
+    weight: 5
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+hidden: {  }

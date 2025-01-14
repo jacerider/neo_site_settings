@@ -1,0 +1,19 @@
+uuid: 1c49bb18-2b85-4295-9621-edfbfcbc346a
+langcode: en
+status: true
+dependencies:
+  module:
+    - neo_site_settings
+id: neo_site_settings.field_address
+field_name: field_address
+entity_type: neo_site_settings
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

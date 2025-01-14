@@ -1,0 +1,26 @@
+uuid: 914bb178-e3e7-4c30-a9c0-ef6de53f18f6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.neo_site_settings.field_email
+    - neo_site_settings.neo_site_settings_type.general
+  module:
+    - neo_site_settings
+third_party_settings:
+  neo_site_settings:
+    config_name: system.site
+    config_key: mail
+    config_delimiter: ''
+id: neo_site_settings.general.field_email
+field_name: field_email
+entity_type: neo_site_settings
+bundle: general
+label: Email
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: email

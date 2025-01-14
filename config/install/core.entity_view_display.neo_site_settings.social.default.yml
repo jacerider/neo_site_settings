@@ -1,0 +1,117 @@
+uuid: a4e0fd73-1637-464c-b3f6-8070819e726b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.neo_site_settings.social.field_facebook
+    - field.field.neo_site_settings.social.field_instagram
+    - field.field.neo_site_settings.social.field_linkedin
+    - field.field.neo_site_settings.social.field_pinterest
+    - field.field.neo_site_settings.social.field_x
+    - field.field.neo_site_settings.social.field_youtube
+    - neo_site_settings.neo_site_settings_type.social
+  module:
+    - neo
+id: neo_site_settings.social.default
+targetEntityType: neo_site_settings
+bundle: social
+mode: default
+content:
+  field_facebook:
+    type: neo_link
+    label: hidden
+    settings:
+      trim_length: '80'
+      rel: nofollow
+      target: _blank
+      title: 'Visit us on Facebook'
+      icon: facebook-square
+      position: ''
+      url_only: false
+      url_plain: false
+      title_only: 0
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_instagram:
+    type: neo_link
+    label: hidden
+    settings:
+      trim_length: '80'
+      rel: nofollow
+      target: _blank
+      title: 'Visit us on Instagram'
+      icon: instagram
+      position: ''
+      url_only: false
+      url_plain: false
+      title_only: 0
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_linkedin:
+    type: neo_link
+    label: hidden
+    settings:
+      trim_length: '80'
+      rel: nofollow
+      target: _blank
+      title: 'Visit us on LinkedIn'
+      icon: linkedin
+      position: ''
+      url_only: false
+      url_plain: false
+      title_only: 0
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_pinterest:
+    type: neo_link
+    label: hidden
+    settings:
+      trim_length: '80'
+      rel: nofollow
+      target: _blank
+      title: 'Visit us on Pinterest'
+      icon: pinterest-square
+      position: ''
+      url_only: false
+      url_plain: false
+      title_only: 0
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_x:
+    type: neo_link
+    label: hidden
+    settings:
+      trim_length: '80'
+      rel: nofollow
+      target: _blank
+      title: 'Visit us on X'
+      icon: x-twitter
+      position: ''
+      url_only: false
+      url_plain: false
+      title_only: 0
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_youtube:
+    type: neo_link
+    label: hidden
+    settings:
+      trim_length: '80'
+      rel: nofollow
+      target: _blank
+      title: 'Visit us on YouTube'
+      icon: youtube
+      position: ''
+      url_only: false
+      url_plain: false
+      title_only: 0
+    third_party_settings: {  }
+    weight: 3
+    region: content
+hidden:
+  search_api_excerpt: true

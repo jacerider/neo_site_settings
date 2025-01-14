@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - neo_site_settings
+id: neo_site_settings_delete_action
+label: 'Delete site settings'
+type: neo_site_settings
+plugin: entity:delete_action:neo_site_settings
+configuration: {  }

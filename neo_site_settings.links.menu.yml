@@ -1,0 +1,11 @@
+entity.neo_site_settings_type.collection:
+  title: 'Site Settings Types'
+  description: 'Manage and CRUD actions on site settings type.'
+  parent: system.admin_structure
+  route_name: entity.neo_site_settings_type.collection
+
+entity.neo_site_settings.collection:
+  title: 'Site Settings'
+  description: 'Manage site settings.'
+  route_name: entity.neo_site_settings.collection
+  parent: system.admin

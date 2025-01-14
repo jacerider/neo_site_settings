@@ -1,0 +1,19 @@
+uuid: 954de819-d6ed-4eda-8972-d9f86f53b593
+langcode: en
+status: true
+dependencies:
+  module:
+    - link
+    - neo_site_settings
+id: neo_site_settings.field_youtube
+field_name: field_youtube
+entity_type: neo_site_settings
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

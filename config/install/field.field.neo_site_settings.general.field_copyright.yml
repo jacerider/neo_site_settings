@@ -1,0 +1,19 @@
+uuid: d1903478-2b41-4b0b-badf-d3177cdfb218
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.neo_site_settings.field_copyright
+    - neo_site_settings.neo_site_settings_type.general
+id: neo_site_settings.general.field_copyright
+field_name: field_copyright
+entity_type: neo_site_settings
+bundle: general
+label: Copyright
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

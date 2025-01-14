@@ -1,0 +1,26 @@
+uuid: 45ad5d5b-67f6-4890-9cb5-61ae6c4fcd58
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.neo_site_settings.field_address
+    - neo_site_settings.neo_site_settings_type.general
+  module:
+    - neo_site_settings
+third_party_settings:
+  neo_site_settings:
+    config_name: ''
+    config_key: ''
+    config_delimiter: ''
+id: neo_site_settings.general.field_address
+field_name: field_address
+entity_type: neo_site_settings
+bundle: general
+label: Address
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

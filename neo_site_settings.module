@@ -1,0 +1,109 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations and global functions.
+ */
+
+use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+
+/**
+ * Implements hook_theme().
+ */
+function neo_site_settings_theme() {
+  $theme = [];
+  $theme['neo_site_settings'] = [
+    'render element' => 'elements',
+  ];
+  return $theme;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function neo_site_settings_theme_suggestions_neo_site_settings(array $variables) {
+  $suggestions = [];
+  $entity = $variables['elements']['#neo_site_settings'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'neo_site_settings__' . $sanitized_view_mode;
+  $suggestions[] = 'neo_site_settings__' . $entity->bundle();
+  $suggestions[] = 'neo_site_settings__' . $entity->bundle() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'neo_site_settings__' . $entity->id();
+  $suggestions[] = 'neo_site_settings__' . $entity->id() . '__' . $sanitized_view_mode;
+  return $suggestions;
+}
+
+/**
+ * Implements templater_preprocess_field().
+ */
+function neo_site_settings_preprocess_field__field_copyright(&$variables) {
+  if (isset($variables['entity_type']) && $variables['entity_type'] == 'neo_site_settings') {
+    $variables['items'][0]['content']['#template'] = '&copy; ' . date('Y') . ' ' . $variables['items'][0]['content']['#template'];
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for field_config_edit_form().
+ */
+function neo_site_settings_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state) {
+  $form_object = $form_state->getFormObject();
+  if (!($form_object instanceof EntityFormInterface)) {
+    return;
+  }
+  /** @var \Drupal\field\FieldConfigInterface $field */
+  $field = $form_object->getEntity();
+  if (!$field || $field->getTargetEntityTypeId() !== 'neo_site_settings') {
+    return;
+  }
+
+  $form['third_party_settings']['neo_site_settings'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Settings Clone'),
+    '#description' => t('When saving this field, the value can be cloned into another config.'),
+    '#weight' => $form['label']['#weight'] + 1,
+  ];
+
+  $form['third_party_settings']['neo_site_settings']['config_name'] = [
+    '#type' => 'textfield',
+    '#title' => t('Config Name'),
+    '#description' => t('The config name. For example, "system.site" would save to the site config.'),
+    '#default_value' => !empty($field->getThirdPartySetting('neo_site_settings', 'config_name')) ? $field->getThirdPartySetting('neo_site_settings', 'config_name') : '',
+    '#maxlength' => 256,
+  ];
+
+  $form['third_party_settings']['neo_site_settings']['config_key'] = [
+    '#type' => 'textfield',
+    '#title' => t('Config Key'),
+    '#description' => t('The config key. For example, "name" would save to the config entered above and place the value in the "name" property. A period-separated key allows for saving to nested values. For example, "page.front".'),
+    '#default_value' => !empty($field->getThirdPartySetting('neo_site_settings', 'config_key')) ? $field->getThirdPartySetting('neo_site_settings', 'config_key') : '',
+    '#maxlength' => 256,
+  ];
+
+  $form['third_party_settings']['neo_site_settings']['config_delimiter'] = [
+    '#type' => 'textfield',
+    '#title' => t('Config Delimiter'),
+    '#description' => t('Multi-value string fields can be imploded and stored as a single value.'),
+    '#default_value' => !empty($field->getThirdPartySetting('neo_site_settings', 'config_delimiter')) ? $field->getThirdPartySetting('neo_site_settings', 'config_delimiter') : '',
+    '#maxlength' => 256,
+  ];
+}
+
+/**
+ * Prepares variables for config page templates.
+ *
+ * Default template: neo_site_settings.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the user information and any
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_neo_site_settings(array &$variables) {
+  // Helpful $content variable for templates.
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}

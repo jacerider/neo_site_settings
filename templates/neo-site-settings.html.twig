@@ -1,0 +1,22 @@
+{#
+/**
+ * @file neo_site_settings.html.twig
+ * Default theme implementation to present config page data.
+ *
+ * This template is used when viewing config page pages.
+ *
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ * - attributes: HTML attributes for the container element.
+ *
+ * @see template_preprocess_neo_site_settings()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes.addClass('site-settings') }}>
+  {% if content %}
+    {{- content -}}
+  {% endif %}
+</div>

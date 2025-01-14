@@ -1,0 +1,23 @@
+{
+  "name": "jacerider/neo_site_settings",
+  "description": "Provides entity-based global settings.",
+  "type": "drupal-module",
+  "license": "proprietary",
+  "homepage": "https://github.com/jacerider/neo_site_settings",
+  "authors": [
+    {
+      "name": "Cyle Carlson (JaceRider)",
+      "email": "jacerider@gmail.com",
+      "role": "Maintainer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/jacerider/neo_site_settings/issues",
+    "source": "https://github.com/jacerider/neo_site_settings"
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "drupal/core": "^10.3",
+    "jacerider/neo": "^1"
+  }
+}
