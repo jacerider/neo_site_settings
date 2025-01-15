@@ -126,7 +126,6 @@ class SiteSettingsGeneralForm extends FormBase {
         '#type' => 'submit',
         '#value' => $this->t('Save'),
         '#button_type' => 'primary',
-        '#validate' => ['::validateForm'],
         '#submit' => ['::submitForm'],
       ],
     ];
@@ -154,6 +153,9 @@ class SiteSettingsGeneralForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    if ($form_state->getErrors()) {
+      return;
+    }
     foreach ($this->entities as $entity) {
       if (isset($form[$entity->id()])) {
         $entity = $this->submitInnerForm($form[$entity->id()], $form_state);
