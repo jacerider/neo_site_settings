@@ -90,11 +90,6 @@ class SiteSettingsGeneralForm extends FormBase {
    * {@inheritDoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    if (count($this->entities) > 1) {
-      $form['tabs'] = [
-        '#type' => 'vertical_tabs',
-      ];
-    }
     $innerForms = [];
     foreach ($this->entities as $entity) {
       $innerForm = $this->createInnerForm([$entity->id()], $entity->getEntityTypeId(), $entity->bundle(), 'default', $entity);
@@ -102,7 +97,8 @@ class SiteSettingsGeneralForm extends FormBase {
         $innerForms[$entity->id()] = [
           '#type' => 'container',
           '#title' => $entity->label(),
-        ] + $this->buildInnerForm($innerForm, $form_state, $form);
+          'form' => $this->buildInnerForm($innerForm, $form_state, $form),
+        ];
       }
     }
 
@@ -131,8 +127,8 @@ class SiteSettingsGeneralForm extends FormBase {
     ];
 
     // Handle copyright.
-    if (!empty($form['general']['field_copyright'])) {
-      $form['general']['field_copyright']['widget'][0]['value']['#field_prefix'] = '&copy; ' . date('Y');
+    if (!empty($form['general']['form']['field_copyright'])) {
+      $form['general']['form']['field_copyright']['widget'][0]['value']['#field_prefix'] = '&copy; ' . date('Y');
     }
 
     return $form;

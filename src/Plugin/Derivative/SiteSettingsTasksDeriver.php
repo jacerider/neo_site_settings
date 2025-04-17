@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\neo_site_settings\Plugin\Derivative;
 
@@ -18,7 +18,7 @@ class SiteSettingsTasksDeriver extends DeriverBase implements ContainerDeriverIn
    * Constructs an entity local tasks deriver.
    */
   public function __construct(
-    private readonly EntityTypeManagerInterface $entityTypeManager
+    private readonly EntityTypeManagerInterface $entityTypeManager,
   ) {
   }
 

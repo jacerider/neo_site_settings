@@ -4,9 +4,6 @@ namespace Drupal\neo_site_settings\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\BlockPluginInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\neo_site_settings\Entity\SiteSettings;
 
 /**

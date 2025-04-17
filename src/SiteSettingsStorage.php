@@ -6,7 +6,6 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -55,7 +54,7 @@ class SiteSettingsStorage extends SqlContentEntityStorage {
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
    *   The event dispatcher.
    */
-  public function __construct(EntityTypeInterface $entity_info, Connection $database, EntityFieldManagerInterface $entity_field_manager, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, EntityTypeManagerInterface $entity_type_manager = NULL, EventDispatcherInterface $dispatcher) {
+  public function __construct(EntityTypeInterface $entity_info, Connection $database, EntityFieldManagerInterface $entity_field_manager, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache, ?EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, ?EntityTypeManagerInterface $entity_type_manager = NULL, EventDispatcherInterface $dispatcher) {
     parent::__construct($entity_info, $database, $entity_field_manager, $cache, $language_manager, $memory_cache, $entity_type_bundle_info, $entity_type_manager);
     $this->eventDispatcher = $dispatcher;
   }
