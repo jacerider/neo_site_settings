@@ -40,7 +40,7 @@ class SiteSettingsGeneralForm extends FormBase {
    *
    * @var \Drupal\neo_site_settings\SiteSettingsInterface[]
    */
-  protected $entities;
+  protected $entities = [];
 
   /**
    * {@inheritdoc}

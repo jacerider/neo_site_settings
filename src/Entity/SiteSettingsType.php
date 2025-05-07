@@ -29,6 +29,7 @@ use Drupal\neo_site_settings\SiteSettingsTypeInterface;
  *       "edit" = "Drupal\neo_site_settings\Form\SiteSettingsTypeForm",
  *       "delete" = "Drupal\Core\Entity\EntityDeleteForm",
  *     },
+ *     "access" = "Drupal\neo_site_settings\SiteSettingsTypeAccessControlHandler",
  *     "list_builder" = "Drupal\neo_site_settings\SiteSettingsTypeListBuilder",
  *     "route_provider" = {
  *       "html" = "Drupal\neo_site_settings\SiteSettingsTypeHtmlRouteProvider",
