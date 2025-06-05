@@ -7,7 +7,7 @@ namespace Drupal\neo_site_settings;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
-use Drupal\neo_icon\IconTranslationTrait;
+use Drupal\neo_icon\IconTrait;
 
 /**
  * Defines a class to build a listing of site settings type entities.
@@ -16,7 +16,7 @@ use Drupal\neo_icon\IconTranslationTrait;
  */
 final class SiteSettingsTypeListBuilder extends ConfigEntityListBuilder {
 
-  use IconTranslationTrait;
+  use IconTrait;
 
   /**
    * {@inheritdoc}
