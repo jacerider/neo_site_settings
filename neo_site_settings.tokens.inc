@@ -65,9 +65,11 @@ function neo_site_settings_tokens($type, $tokens, array $data, array $options, B
           /** @var \Drupal\neo_site_settings\SiteSettingsStorage $storage */
           $storage = \Drupal::entityTypeManager()->getStorage('neo_site_settings');
           $settings = $storage->loadByType('general');
-          $bubbleable_metadata->addCacheableDependency($settings);
-          if ($settings->hasField('field_phone') && !$settings->get('field_phone')->isEmpty()) {
-            $replacements[$original] = $settings->get('field_phone')->value;
+          if ($settings) {
+            $bubbleable_metadata->addCacheableDependency($settings);
+            if ($settings->hasField('field_phone') && !$settings->get('field_phone')->isEmpty()) {
+              $replacements[$original] = $settings->get('field_phone')->value;
+            }
           }
           break;
 
@@ -75,20 +77,22 @@ function neo_site_settings_tokens($type, $tokens, array $data, array $options, B
           /** @var \Drupal\neo_site_settings\SiteSettingsStorage $storage */
           $storage = \Drupal::entityTypeManager()->getStorage('neo_site_settings');
           $settings = $storage->loadByType('general');
-          $bubbleable_metadata->addCacheableDependency($settings);
-          if ($settings->hasField('field_address') && !$settings->get('field_address')->isEmpty()) {
-            $addressString = $settings->get('field_address')->value;
-            $addressParts = neo_site_settings_address_parse($addressString);
-            $replacements[$original] = match($op) {
-              'street_1' => $addressParts['street_number'] . ' ' . $addressParts['street_name'],
-              'street_2' => $addressParts['unit'] ? ', ' . $addressParts['unit'] : '',
-              'city' => $addressParts['city'],
-              'state' => $addressParts['state'],
-              'zip' => $addressParts['zip'],
-              'country' => $addressParts['country'],
-              default => implode(', ', array_map('trim', explode("\n", $addressString))),
-            };
-            $cache[$original] = $replacements[$original];
+          if ($settings) {
+            $bubbleable_metadata->addCacheableDependency($settings);
+            if ($settings->hasField('field_address') && !$settings->get('field_address')->isEmpty()) {
+              $addressString = $settings->get('field_address')->value;
+              $addressParts = neo_site_settings_address_parse($addressString);
+              $replacements[$original] = match($op) {
+                'street_1' => $addressParts['street_number'] . ' ' . $addressParts['street_name'],
+                'street_2' => $addressParts['unit'] ? ', ' . $addressParts['unit'] : '',
+                'city' => $addressParts['city'],
+                'state' => $addressParts['state'],
+                'zip' => $addressParts['zip'],
+                'country' => $addressParts['country'],
+                default => implode(', ', array_map('trim', explode("\n", $addressString))),
+              };
+              $cache[$original] = $replacements[$original];
+            }
           }
           break;
       }
