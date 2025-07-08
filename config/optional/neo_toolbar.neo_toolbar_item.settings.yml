@@ -12,9 +12,7 @@ plugin: link
 weight: -1
 settings:
   url: 'internal:/admin/settings'
-  token:
-    tokens: ''
-  target: 0
+  target: false
   icon: cog
   badge:
     type: ''

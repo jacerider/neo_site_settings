@@ -5,4 +5,4 @@ dependencies: {  }
 id: social
 label: Social
 weight: 0
-aggregate: 1
+aggregate: true

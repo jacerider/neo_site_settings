@@ -1,0 +1,30 @@
+field.field.*.*.*.third_party.neo_site_settings:
+  type: mapping
+  label: 'Shortcut settings'
+  mapping:
+    config_name:
+      type: string
+      label: Config Name
+    config_key:
+      type: string
+      label: Config Key
+    config_delimiter:
+      type: string
+      label: Config Delimiter
+
+neo_site_settings.neo_site_settings_type.*:
+  type: config_entity
+  label: 'Site Settings type config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    weight:
+      type: integer
+      label: Weight
+    aggregate:
+      type: boolean
+      label: Aggregate

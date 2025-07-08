@@ -5,5 +5,6 @@ package: Neo
 version: 0.0.0
 core_version_requirement: ^10.3 || ^11
 dependencies:
+  - drupal:link
   - neo:neo
   - drupal:telephone

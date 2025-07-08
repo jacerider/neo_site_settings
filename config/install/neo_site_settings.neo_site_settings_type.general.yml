@@ -5,4 +5,4 @@ dependencies: {  }
 id: general
 label: General
 weight: 0
-aggregate: 1
+aggregate: true
