@@ -28,3 +28,27 @@ neo_site_settings.neo_site_settings_type.*:
     aggregate:
       type: boolean
       label: Aggregate
+
+block.settings.neo_site_settings:
+  type: block_settings
+  label: 'Site Settings block'
+  mapping:
+    site_settings_type:
+      type: string
+      label: 'Type'
+    site_settings_view_mode:
+      type: string
+      label: 'View Mode'
+
+block.settings.neo_site_settings_field:
+  type: block_settings
+  label: 'Site Settings fields block'
+  mapping:
+    site_settings_fields:
+      type: sequence
+      label: 'Fields'
+      sequence:
+        type: string
+    site_settings_view_mode:
+      type: string
+      label: 'View Mode'
