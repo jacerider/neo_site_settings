@@ -140,7 +140,7 @@ class SiteSettingsGeneralForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     foreach ($this->entities as $entity) {
       if (isset($form[$entity->id()])) {
-        $this->validateInnerForm($form[$entity->id()], $form_state);
+        $this->validateInnerForm($form[$entity->id()]['form'], $form_state);
       }
     }
   }
@@ -154,10 +154,11 @@ class SiteSettingsGeneralForm extends FormBase {
     }
     foreach ($this->entities as $entity) {
       if (isset($form[$entity->id()])) {
-        $entity = $this->submitInnerForm($form[$entity->id()], $form_state);
+        $entity = $this->submitInnerForm($form[$entity->id()]['form'], $form_state);
         $entity->save();
       }
     }
+    $this->messenger()->addStatus($this->t('The site settings have been updated.'));
     $form_state->setRedirect('entity.neo_site_settings.collection');
   }
 
