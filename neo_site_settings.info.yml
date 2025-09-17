@@ -2,7 +2,7 @@ name: Neo | Site Settings
 type: module
 description: 'Provides entity-based global settings.'
 package: Neo
-version: 0.0.0
+version: 1.0.13
 core_version_requirement: ^10.3 || ^11
 dependencies:
   - drupal:link
