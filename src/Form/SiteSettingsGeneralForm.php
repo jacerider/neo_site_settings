@@ -102,6 +102,12 @@ class SiteSettingsGeneralForm extends FormBase {
       }
     }
 
+    $form['message'] = [
+      '#type' => 'status_message',
+      '#value' => $this->t('Changes to these settings will affect the entire site.'),
+      '#style' => 'info',
+    ];
+
     if (!empty($innerForms)) {
       if (count($this->entities) > 1) {
         $form['tabs'] = [
