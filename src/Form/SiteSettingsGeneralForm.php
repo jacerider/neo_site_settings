@@ -107,7 +107,7 @@ class SiteSettingsGeneralForm extends FormBase {
         $form['tabs'] = [
           '#type' => 'vertical_tabs',
         ];
-        foreach ($innerForms as &$innerForm) {
+        foreach ($innerForms as $key => &$innerForm) {
           $innerForm['#type'] = 'details';
           $innerForm['#group'] = 'tabs';
         }
