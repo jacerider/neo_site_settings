@@ -42,6 +42,7 @@ use Drupal\neo_site_settings\SiteSettingsTypeInterface;
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid",
+ *     "weight" = "weight",
  *   },
  *   links = {
  *     "add-form" = "/admin/structure/neo_site_settings_types/add",
