@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\neo_site_settings;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
+use Drupal\Core\Config\Entity\DraggableListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\neo_icon\IconTrait;
@@ -14,15 +15,22 @@ use Drupal\neo_icon\IconTrait;
  *
  * @see \Drupal\neo_site_settings\Entity\SiteSettingsType
  */
-final class SiteSettingsTypeListBuilder extends ConfigEntityListBuilder {
+final class SiteSettingsTypeListBuilder extends DraggableListBuilder {
 
   use IconTrait;
 
   /**
    * {@inheritdoc}
    */
+  public function getFormId() {
+    return 'neo_site_settings_type_list_builder';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildHeader(): array {
-    $header['label'] = $this->t('Label');
+    $header['name'] = $this->t('Form Type');
     $header['id'] = $this->t('ID');
     $header['aggregated'] = $this->t('Aggregated');
     return $header + parent::buildHeader();
@@ -33,16 +41,19 @@ final class SiteSettingsTypeListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity): array {
     /** @var \Drupal\neo_site_settings\SiteSettingsTypeInterface $entity */
-    $row['label']['data'] = [
+    $row = [];
+    $row['name']['data'] = [
       '#type' => 'link',
-      '#title' => $entity->label(),
+      '#title' => (string) $entity->label(),
       '#url' => $entity->isAggregate() ? Url::fromRoute('entity.neo_site_settings.collection') : $entity->toUrl('page-form'),
     ];
+    $row['name']['#neo_style'] = 'heading';
     $row['id']['data']['#markup'] = '<small>' . $entity->id() . '</small>';
-    $row['aggregated']['data']['#markup'] = $entity->isAggregate() ? $this->icon('Yes')->iconOnly() : $this->icon('No')->iconOnly();
+    $row['aggregated']['data']['#markup'] = $this->statusIcon($entity->isAggregate())->iconOnly();
     $row['aggregated']['#neo_size'] = 'min';
     $row['aggregated']['#neo_align'] = 'center';
-    return $row + parent::buildRow($entity);
+    $row = $row + parent::buildRow($entity);
+    return $row;
   }
 
   /**
