@@ -28,6 +28,9 @@ neo_site_settings.neo_site_settings_type.*:
     aggregate:
       type: boolean
       label: Aggregate
+    icon:
+      type: string
+      label: Icon
 
 block.settings.neo_site_settings:
   type: block_settings

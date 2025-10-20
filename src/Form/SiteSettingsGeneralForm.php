@@ -8,6 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\neo\NeoNestedEntityFormTrait;
+use Drupal\neo_icon\IconTrait;
 
 /**
  * Aggregated settings form.
@@ -15,6 +16,7 @@ use Drupal\neo\NeoNestedEntityFormTrait;
 class SiteSettingsGeneralForm extends FormBase {
 
   use NeoNestedEntityFormTrait;
+  use IconTrait;
 
   /**
    * Drupal\Core\Entity\EntityTypeManagerInterface definition.
@@ -92,11 +94,14 @@ class SiteSettingsGeneralForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $innerForms = [];
     foreach ($this->entities as $entity) {
+      /** @var \Drupal\neo_site_settings\SiteSettingsInterface $entity */
       $innerForm = $this->createInnerForm([$entity->id()], $entity->getEntityTypeId(), $entity->bundle(), 'default', $entity);
       if ($innerForm) {
+        /** @var \Drupal\neo_site_settings\SiteSettingsTypeInterface $entityType */
+        $entityType = $entity->bundle->entity;
         $innerForms[$entity->id()] = [
           '#type' => 'container',
-          '#title' => $entity->label(),
+          '#title' => $entityType->getIcon() ? $this->icon($entity->label(), $entityType->getIcon()) : $this->adminIcon($entity->label()),
           'form' => $this->buildInnerForm($innerForm, $form_state, $form),
         ];
       }

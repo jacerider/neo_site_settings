@@ -6,3 +6,4 @@ id: social
 label: Social
 weight: 0
 aggregate: true
+icon: share-alt

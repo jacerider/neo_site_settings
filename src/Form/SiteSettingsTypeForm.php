@@ -45,6 +45,13 @@ final class SiteSettingsTypeForm extends BundleEntityFormBase {
       '#description' => $this->t('A unique machine-readable name for this site settings type. It must only contain lowercase letters, numbers, and underscores.'),
     ];
 
+    $form['icon'] = [
+      '#type' => 'neo_icon_select',
+      '#title' => $this->t('Icon'),
+      '#default_value' => $entity->getIcon(),
+      '#description' => $this->t('The icon for this site settings type. This can be a font icon class or a custom SVG.'),
+    ];
+
     $form['aggregate'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Aggregate'),

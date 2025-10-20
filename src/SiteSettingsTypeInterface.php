@@ -46,4 +46,23 @@ interface SiteSettingsTypeInterface extends ConfigEntityInterface {
    */
   public function isAggregate();
 
+  /**
+   * Gets the icon for this site settings type.
+   *
+   * @return string
+   *   The icon.
+   */
+  public function getIcon(): string;
+
+  /**
+   * Sets the icon for this site settings type.
+   *
+   * @param string $icon
+   *   The icon.
+   *
+   * @return $this
+   *   The current instance of the class for method chaining.
+   */
+  public function setIcon(string $icon): self;
+
 }

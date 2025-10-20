@@ -6,3 +6,4 @@ id: general
 label: General
 weight: 0
 aggregate: true
+icon: tools

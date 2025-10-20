@@ -57,6 +57,7 @@ use Drupal\neo_site_settings\SiteSettingsTypeInterface;
  *     "uuid",
  *     "weight",
  *     "aggregate",
+ *     "icon",
  *   },
  * )
  */
@@ -85,6 +86,13 @@ final class SiteSettingsType extends ConfigEntityBundleBase implements SiteSetti
    * @var int
    */
   protected $aggregate = FALSE;
+
+  /**
+   * The icon for this site settings type.
+   *
+   * @var string
+   */
+  protected $icon = '';
 
   /**
    * Provides the list of site settings types.
@@ -132,6 +140,24 @@ final class SiteSettingsType extends ConfigEntityBundleBase implements SiteSetti
    */
   public function isAggregate() {
     return !empty($this->aggregate);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setIcon(string $icon): self {
+    $this->icon = $icon;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIcon(): string {
+    if (is_array($this->icon)) {
+      return '';
+    }
+    return $this->icon ?? '';
   }
 
   /**

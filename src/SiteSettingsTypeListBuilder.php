@@ -44,7 +44,7 @@ final class SiteSettingsTypeListBuilder extends DraggableListBuilder {
     $row = [];
     $row['name']['data'] = [
       '#type' => 'link',
-      '#title' => (string) $entity->label(),
+      '#title' => $entity->getIcon() ? $this->icon($entity->label(), $entity->getIcon()) : $entity->label(),
       '#url' => $entity->isAggregate() ? Url::fromRoute('entity.neo_site_settings.collection') : $entity->toUrl('page-form'),
     ];
     $row['name']['#neo_style'] = 'heading';
