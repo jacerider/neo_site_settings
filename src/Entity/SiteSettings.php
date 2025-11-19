@@ -26,6 +26,7 @@ use Drupal\neo_site_settings\SiteSettingsInterface;
  *   handlers = {
  *     "storage" = "Drupal\neo_site_settings\SiteSettingsStorage",
  *     "list_builder" = "Drupal\neo_site_settings\SiteSettingsListBuilder",
+ *     "access" = "Drupal\neo_site_settings\SiteSettingsAccessControlHandler",
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "form" = {
  *       "default" = "Drupal\neo_site_settings\Form\SiteSettingsForm",
