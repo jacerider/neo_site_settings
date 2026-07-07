@@ -68,3 +68,11 @@ neo_alchemist.neo_component_value.site_settings:
     shape_published:
       type: boolean
       label: Shape published
+
+neo_alchemist.neo_component_value.site_settings_links:
+  type: mapping
+  label: 'Site Settings links value provider'
+  mapping:
+    bundle:
+      type: string
+      label: 'Site Settings bundle'
