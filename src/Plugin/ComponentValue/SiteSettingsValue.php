@@ -47,27 +47,6 @@ final class SiteSettingsValue extends ComponentValuePluginBase implements Contai
   protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
-   */
-  protected EventDispatcherInterface $eventDispatcher;
-
-  /**
-   * The field matcher.
-   *
-   * @var \Drupal\neo_alchemist\MatcherField
-   */
-  protected MatcherField $matcherField;
-
-  /**
-   * The reference matcher.
-   *
-   * @var \Drupal\neo_alchemist\MatcherReference
-   */
-  protected MatcherReference $matcherReference;
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(
