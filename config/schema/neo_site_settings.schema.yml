@@ -76,3 +76,17 @@ neo_alchemist.neo_component_value.site_settings_links:
     bundle:
       type: string
       label: 'Site Settings bundle'
+
+neo_alchemist.neo_component_value.site_settings_field:
+  type: mapping
+  label: 'Site Settings field value provider'
+  mapping:
+    bundle:
+      type: string
+      label: 'Site Settings bundle'
+    field:
+      type: string
+      label: 'Field'
+    render:
+      type: boolean
+      label: 'Render through field display'
