@@ -90,3 +90,14 @@ neo_alchemist.neo_component_value.site_settings_field:
     render:
       type: boolean
       label: 'Render through field display'
+
+neo_alchemist.neo_component_value.site_settings_fallback_media:
+  type: mapping
+  label: 'Site Settings fallback media value provider'
+  mapping:
+    bundle:
+      type: string
+      label: 'Site Settings bundle'
+    field:
+      type: string
+      label: 'Media field'
