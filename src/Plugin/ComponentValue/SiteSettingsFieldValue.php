@@ -18,7 +18,9 @@ use Drupal\neo_alchemist\Attribute\ComponentValue;
 use Drupal\neo_alchemist\ComponentPropRenderable;
 use Drupal\neo_alchemist\ComponentShapePluginInterface;
 use Drupal\neo_alchemist\ComponentValuePluginBase;
+use Drupal\neo_alchemist\ComponentValueProcessingModeInterface;
 use Drupal\neo_alchemist\MatcherField;
+use Drupal\neo_alchemist\Plugin\ComponentValue\ComponentValueProcessingModeTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -40,9 +42,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
   ],
   weight: 5,
 )]
-final class SiteSettingsFieldValue extends ComponentValuePluginBase implements ContainerFactoryPluginInterface {
+final class SiteSettingsFieldValue extends ComponentValuePluginBase implements ContainerFactoryPluginInterface, ComponentValueProcessingModeInterface {
 
   use DependencySerializationTrait;
+  use ComponentValueProcessingModeTrait;
 
   /**
    * The entity type manager service.
@@ -106,7 +109,7 @@ final class SiteSettingsFieldValue extends ComponentValuePluginBase implements C
       'bundle' => '',
       'field' => '',
       'render' => FALSE,
-    ];
+    ] + $this->processingModeDefaultConfiguration();
   }
 
   /**
@@ -169,6 +172,8 @@ final class SiteSettingsFieldValue extends ComponentValuePluginBase implements C
       ];
     }
 
+    $form = $this->buildProcessingModeForm($form, $form_state);
+
     return $form;
   }
 
@@ -215,7 +220,6 @@ final class SiteSettingsFieldValue extends ComponentValuePluginBase implements C
       // Make the Site Settings value authoritative over lower-weighted
       // providers such as the weight-1000 "default" provider. When the field
       // is empty we return the incoming value so a configured default can win.
-      $this->stopFurtherProcessing();
       return $result;
     }
 

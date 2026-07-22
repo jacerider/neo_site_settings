@@ -13,6 +13,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\neo_alchemist\Attribute\ComponentValue;
 use Drupal\neo_alchemist\ComponentShapePluginInterface;
 use Drupal\neo_alchemist\ComponentValuePluginBase;
+use Drupal\neo_alchemist\ComponentValueProcessingModeInterface;
+use Drupal\neo_alchemist\Plugin\ComponentValue\ComponentValueProcessingModeTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -35,9 +37,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
   ],
   weight: 5,
 )]
-final class SiteSettingsLinksValue extends ComponentValuePluginBase implements ContainerFactoryPluginInterface {
+final class SiteSettingsLinksValue extends ComponentValuePluginBase implements ContainerFactoryPluginInterface, ComponentValueProcessingModeInterface {
 
   use DependencySerializationTrait;
+  use ComponentValueProcessingModeTrait;
 
   /**
    * The entity type manager service.
@@ -89,7 +92,7 @@ final class SiteSettingsLinksValue extends ComponentValuePluginBase implements C
   public function defaultConfiguration() {
     return [
       'bundle' => '',
-    ];
+    ] + $this->processingModeDefaultConfiguration();
   }
 
   /**
@@ -120,6 +123,9 @@ final class SiteSettingsLinksValue extends ComponentValuePluginBase implements C
       '#required' => TRUE,
       '#empty_option' => $this->t('- Select -'),
     ];
+
+    $form = $this->buildProcessingModeForm($form, $form_state);
+
     return $form;
   }
 
@@ -175,8 +181,8 @@ final class SiteSettingsLinksValue extends ComponentValuePluginBase implements C
       // Prefer the formatter title, then the link's own title, then the label.
       $title = (string) (($settings['title'] ?? '') ?: ($link->title ?: $definition->getLabel()));
 
-      // Only '_self' / '_blank' are valid link targets; the neo_link formatter's
-      // "no target" option stores 0, which we treat as unset.
+      // Only '_self' / '_blank' are valid link targets; the neo_link
+      // formatter's "no target" option stores 0, which we treat as unset.
       $target = (string) ($settings['target'] ?? '');
       if (!in_array($target, ['_self', '_blank'], TRUE)) {
         $target = '';

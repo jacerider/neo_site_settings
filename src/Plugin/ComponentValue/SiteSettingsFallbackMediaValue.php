@@ -232,12 +232,10 @@ final class SiteSettingsFallbackMediaValue extends ComponentValuePluginBase impl
       return $value;
     }
 
-    // Only fill when nothing real is present. The media_image_size modifier may
-    // seed a "size" key in its own provideDefaultValue(); ignore it before the
-    // emptiness test so an otherwise-empty media value still triggers.
-    $check = is_array($value) ? $value : ['_' => $value];
-    unset($check['size']);
-    if (!empty($check)) {
+    // Only fill when nothing real is present. isProvidedValueEmpty() ignores
+    // the "size" key the media_image_size modifier seeds, so an otherwise-empty
+    // media value still triggers the fallback.
+    if (!$this->shape->isProvidedValueEmpty($value)) {
       return $value;
     }
 

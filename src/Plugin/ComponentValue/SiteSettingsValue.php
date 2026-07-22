@@ -15,9 +15,11 @@ use Drupal\neo_alchemist\Attribute\ComponentValue;
 use Drupal\neo_alchemist\ComponentShapeChildrenMatchPluginInterface;
 use Drupal\neo_alchemist\ComponentShapePluginInterface;
 use Drupal\neo_alchemist\ComponentValuePluginBase;
+use Drupal\neo_alchemist\ComponentValueProcessingModeInterface;
 use Drupal\neo_alchemist\MatcherField;
 use Drupal\neo_alchemist\MatcherReference;
 use Drupal\neo_alchemist\Plugin\ComponentValue\ComponentValueChildrenMatchTrait;
+use Drupal\neo_alchemist\Plugin\ComponentValue\ComponentValueProcessingModeTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -34,10 +36,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
   ],
   weight: 5,
 )]
-final class SiteSettingsValue extends ComponentValuePluginBase implements ContainerFactoryPluginInterface {
+final class SiteSettingsValue extends ComponentValuePluginBase implements ContainerFactoryPluginInterface, ComponentValueProcessingModeInterface {
 
   use DependencySerializationTrait;
   use ComponentValueChildrenMatchTrait;
+  use ComponentValueProcessingModeTrait;
 
   /**
    * The entity type manager service.
@@ -88,7 +91,8 @@ final class SiteSettingsValue extends ComponentValuePluginBase implements Contai
   public function defaultConfiguration() {
     return [
       'bundle' => '',
-    ] + $this->childrenMatchDefaultConfiguration();
+    ] + $this->childrenMatchDefaultConfiguration()
+      + $this->processingModeDefaultConfiguration();
   }
 
   /**
@@ -126,6 +130,8 @@ final class SiteSettingsValue extends ComponentValuePluginBase implements Contai
       $form += $this->buildChildrenMatchConfigurationForm($this->shape, $form, $form_state, 'neo_site_settings', $bundleId, $this->configuration);
     }
 
+    $form = $this->buildProcessingModeForm($form, $form_state);
+
     return $form;
   }
 
@@ -159,11 +165,11 @@ final class SiteSettingsValue extends ComponentValuePluginBase implements Contai
       $entity = $storage->loadOrCreateByType($bundleId);
       if ($entity) {
         $this->shape->addCacheableDependency($entity);
-        $this->stopFurtherProcessing();
         return $this->getChildrenMatchValues($this->shape, [$entity], $this->configuration);
       }
     }
-    return NULL;
+    // Can't act: pass the threaded value through rather than wiping it to NULL.
+    return $value;
   }
 
 }

@@ -68,6 +68,9 @@ neo_alchemist.neo_component_value.site_settings:
     shape_published:
       type: boolean
       label: Shape published
+    processing_mode:
+      type: string
+      label: 'Processing mode'
 
 neo_alchemist.neo_component_value.site_settings_links:
   type: mapping
@@ -76,6 +79,9 @@ neo_alchemist.neo_component_value.site_settings_links:
     bundle:
       type: string
       label: 'Site Settings bundle'
+    processing_mode:
+      type: string
+      label: 'Processing mode'
 
 neo_alchemist.neo_component_value.site_settings_field:
   type: mapping
@@ -90,6 +96,9 @@ neo_alchemist.neo_component_value.site_settings_field:
     render:
       type: boolean
       label: 'Render through field display'
+    processing_mode:
+      type: string
+      label: 'Processing mode'
 
 neo_alchemist.neo_component_value.site_settings_fallback_media:
   type: mapping
