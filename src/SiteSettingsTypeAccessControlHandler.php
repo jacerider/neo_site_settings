@@ -30,15 +30,4 @@ class SiteSettingsTypeAccessControlHandler extends EntityAccessControlHandler {
     return parent::checkAccess($entity, $operation, $account);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    $access = AccessResult::allowedIfHasPermission($account, 'administer neo_site_settings');
-    if ($entity_bundle) {
-      $access->orIf(AccessResult::allowedIfHasPermission($account, 'edit ' . $entity_bundle . ' site settings'));
-    }
-    return $access;
-  }
-
 }

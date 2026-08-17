@@ -32,8 +32,7 @@ class SiteSettingsHtmlRouteProvider extends AdminHtmlRouteProvider {
           '_title_arguments' => $label->getArguments(),
           '_title_context' => $label->getOption('context'),
         ]);
-      $permissions = ['administer neo_site_settings'];
-      $permissions = ['edit all neo_site_settings'];
+      $permissions = [$admin_permission, 'edit all neo_site_settings'];
       foreach ($this->entityTypeManager->getStorage('neo_site_settings_type')->loadMultiple() as $site_settings) {
         $permissions[] = 'edit ' . $site_settings->id() . ' site settings';
       }

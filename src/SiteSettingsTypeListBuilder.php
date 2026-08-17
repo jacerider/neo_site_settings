@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\neo_site_settings;
 
-use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Config\Entity\DraggableListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
@@ -45,7 +44,7 @@ final class SiteSettingsTypeListBuilder extends DraggableListBuilder {
     $row['name']['data'] = [
       '#type' => 'link',
       '#title' => $entity->getIcon() ? $this->icon($entity->label(), $entity->getIcon()) : $entity->label(),
-      '#url' => $entity->isAggregate() ? Url::fromRoute('entity.neo_site_settings.collection') : $entity->toUrl('page-form'),
+      '#url' => $entity->toUrl('page-form'),
     ];
     $row['name']['#neo_style'] = 'heading';
     $row['id']['data']['#markup'] = '<small>' . $entity->id() . '</small>';

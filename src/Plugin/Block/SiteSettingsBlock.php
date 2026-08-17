@@ -158,7 +158,9 @@ class SiteSettingsBlock extends BlockBase implements BlockPluginInterface, Conta
   public function calculateDependencies() {
     $config = $this->getConfiguration();
     $dependencies = parent::calculateDependencies();
-    $dependencies['config'][] = 'neo_site_settings.neo_site_settings_type.' . $config['site_settings_type'];
+    if (!empty($config['site_settings_type'])) {
+      $dependencies['config'][] = 'neo_site_settings.neo_site_settings_type.' . $config['site_settings_type'];
+    }
     if (!empty($config['site_settings_view_mode'])) {
       $dependencies['config'][] = 'core.entity_view_mode.neo_site_settings.' . $config['site_settings_view_mode'];
     }

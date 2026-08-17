@@ -139,7 +139,7 @@ class SiteSettingsStorage extends SqlContentEntityStorage {
   public function hasNonAggregated() {
     $query = $this->entityTypeManager->getStorage('neo_site_settings_type')->getQuery();
     $query->condition('aggregate', 0);
-    return $query->count()->accessCheck(FALSE)->execute() > 1;
+    return $query->count()->accessCheck(FALSE)->execute() > 0;
   }
 
 }
