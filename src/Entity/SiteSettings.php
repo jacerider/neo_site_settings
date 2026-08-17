@@ -12,6 +12,23 @@ use Drupal\neo_site_settings\SiteSettingsInterface;
 /**
  * Defines the site settings entity class.
  *
+ * A note on translatable = TRUE below: it is declared for schema reasons and is
+ * currently inert. The entity type declares no "canonical" link template, and
+ * content_translation gates its support on one, so this type can never be
+ * offered for translation as it stands. No code path here resolves a
+ * translation either, apart from SiteSettingsBlock, which gets it for free from
+ * core's entity view builder.
+ *
+ * Two consequences worth knowing before changing any of this:
+ * - Removing translatable would drop the data table, which is a destructive
+ *   entity schema update, and core refuses the translatable to untranslatable
+ *   transition while rows exist.
+ * - Adding a canonical link template would silently activate translation
+ *   support. Doing so means also resolving translations in
+ *   SiteSettingsStorage::loadByType() and adding the languages:language_content
+ *   cache context wherever this entity is read. Both have to land together, or
+ *   one language's values will be served to another from cache.
+ *
  * @ContentEntityType(
  *   id = "neo_site_settings",
  *   label = @Translation("Site Settings"),

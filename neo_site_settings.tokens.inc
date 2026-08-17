@@ -146,7 +146,6 @@ function neo_site_settings_tokens($type, $tokens, array $data, array $options, B
  *   address yields an all-empty result rather than an error.
  */
 function neo_site_settings_address_parse($address) {
-  $lines = array_map('trim', explode("\n", trim($address)));
   $result = [
     'street_number' => '',
     'street_name' => '',
@@ -157,46 +156,55 @@ function neo_site_settings_address_parse($address) {
     'country' => '',
   ];
 
-  // Handle multi-line addresses.
-  if (count($lines) > 1) {
-    $streetLine = array_shift($lines);
-    $lastLine = array_pop($lines);
+  $address = trim(str_replace("\r\n", "\n", (string) $address));
+  if ($address === '') {
+    return $result;
+  }
 
-    // Parse street line.
-    if (preg_match('/^(\d+\w*)\s+(.+?)(?:\s+(apt|unit|suite|#)\s*(.+))?$/i', $streetLine, $matches)) {
+  // Peel the state and ZIP off the end first. Doing this before splitting means
+  // the rest of the parse does not care whether the input was written across
+  // lines or as one comma-separated string.
+  if (preg_match('/,?\s*([A-Za-z]{2})\s+(\d{5}(?:-\d{4})?)\s*$/', $address, $matches)) {
+    $result['state'] = strtoupper($matches[1]);
+    $result['zip'] = $matches[2];
+    $address = substr($address, 0, -strlen($matches[0]));
+  }
+
+  // Whatever is left is a list of parts, however the author separated them.
+  $parts = preg_split('/\s*[\n,]\s*/', $address, -1, PREG_SPLIT_NO_EMPTY);
+  $parts = array_values(array_filter(array_map('trim', $parts), 'strlen'));
+  if (!$parts) {
+    return $result;
+  }
+
+  // The last part is the city, but only when something precedes it or a state
+  // and ZIP were found; a lone fragment is not enough to call it a city.
+  if (count($parts) > 1 || $result['state'] !== '') {
+    $result['city'] = array_pop($parts);
+  }
+
+  // The street is the first remaining part that opens with a house number,
+  // rather than whichever part happens to come first: real addresses often
+  // lead with a company or recipient line.
+  $streetIndex = NULL;
+  foreach ($parts as $index => $part) {
+    if (preg_match('/^(\d+\w*)\s+(.+?)(?:\s+(apt|unit|suite|ste|#)\s*(.+))?$/i', $part, $matches)) {
       $result['street_number'] = $matches[1];
       $result['street_name'] = $matches[2];
-      if (isset($matches[4])) {
+      if (isset($matches[4]) && $matches[4] !== '') {
         $result['unit'] = $matches[3] . ' ' . $matches[4];
       }
-    }
-
-    // Parse city, state, zip line. Case-insensitive so that a lower-cased
-    // state ("il 62704") still yields a state and a ZIP.
-    if (preg_match('/^(.+?),?\s+([A-Z]{2})\s+(\d{5}(?:-\d{4})?)/i', $lastLine, $matches)) {
-      $result['city'] = trim($matches[1], ', ');
-      $result['state'] = strtoupper($matches[2]);
-      $result['zip'] = $matches[3];
+      $streetIndex = $index;
+      break;
     }
   }
-  else {
-    // Single line parsing.
-    $parts = preg_split('/,\s*/', $address);
-    if (count($parts) >= 3) {
-      // Street.
-      if (preg_match('/^(\d+\w*)\s+(.+)/', $parts[0], $matches)) {
-        $result['street_number'] = $matches[1];
-        $result['street_name'] = $matches[2];
-      }
 
-      // City.
-      $result['city'] = $parts[1];
-
-      // State and ZIP. Case-insensitive, as above.
-      if (preg_match('/([A-Z]{2})\s+(\d{5}(?:-\d{4})?)/i', $parts[2], $matches)) {
-        $result['state'] = strtoupper($matches[1]);
-        $result['zip'] = $matches[2];
-      }
+  // Anything between the street and the city is the unit, unless the street
+  // line already carried one inline.
+  if ($streetIndex !== NULL && $result['unit'] === '') {
+    $trailing = array_slice($parts, $streetIndex + 1);
+    if ($trailing) {
+      $result['unit'] = implode(' ', $trailing);
     }
   }
 

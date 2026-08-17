@@ -7,7 +7,16 @@ use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\neo_site_settings\Entity\SiteSettings;
 
 /**
- * Provides base for blocks that was to use a settings entity.
+ * Provides a base for blocks that render from a settings entity.
+ *
+ * Deprecated, and a candidate for removal in the next major version. Nothing in
+ * this package or any known consumer extends it, it is not itself a block
+ * plugin, and its settings type is hardcoded to "general" with no way to
+ * override it. It is kept only because removing a published class is a breaking
+ * change for consumers this package cannot see.
+ *
+ * Prefer SiteSettingsBlock, which is configurable, or read the entity directly
+ * through SiteSettingsStorage::loadByType().
  */
 class SiteSettingsTypeBlockBase extends BlockBase implements BlockPluginInterface {
 

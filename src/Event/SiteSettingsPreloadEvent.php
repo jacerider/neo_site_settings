@@ -7,7 +7,19 @@ use Symfony\Contracts\EventDispatcher\Event;
 /**
  * Event that is fired before a settings type is loaded.
  *
- * Allows for altering of the type id.
+ * Allows for altering of the type id, so that a subscriber can serve a
+ * context-specific settings entity (per domain, per language, and so on).
+ *
+ * Two things subscribers must know:
+ *
+ * - Only SiteSettingsStorage::loadByType() and loadOrCreateByType() consult
+ *   this event. Core's load(), loadMultiple(), loadByProperties() and entity
+ *   queries do not, so a remapped id is visible through the first pair and
+ *   invisible through the second. Code that must honour the remap has to go
+ *   through the byType methods.
+ * - Subscribers must be idempotent and free of side effects. The value is used
+ *   both to look a row up and, on a miss, to create one, and bundle teardown
+ *   deletes by bundle rather than by the remapped id.
  */
 class SiteSettingsPreloadEvent extends Event {
 
