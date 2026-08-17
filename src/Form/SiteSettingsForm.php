@@ -28,11 +28,8 @@ final class SiteSettingsForm extends ContentEntityForm implements NeoNestedEntit
     // Clone to config as specified.
     foreach ($this->entity->getFieldDefinitions() as $field) {
       if ($field instanceof FieldConfigInterface) {
-        if ($clone_info = $this->getCloneDefinition($field)) {
+        if ($clone = $this->getCloneDefinition($field)) {
           $values = [];
-          $name = $clone_info['name'];
-          $key = $clone_info['key'];
-          $delimiter = $clone_info['delimiter'];
           foreach ($this->entity->get($field->getName())->getValue() as $value) {
             $value = $value[$field->getFieldStorageDefinition()->getMainPropertyName()];
             if ($field->getType() == 'link') {
@@ -40,9 +37,13 @@ final class SiteSettingsForm extends ContentEntityForm implements NeoNestedEntit
             }
             $values[] = $value;
           }
-          $value = implode($delimiter ? $delimiter : '', $values);
-          \Drupal::configFactory()->getEditable($name)
-            ->set($key, $value)
+          // An empty field has nothing to clone. Writing the imploded empty
+          // string here would blank the target key instead of leaving it alone.
+          if (!$values) {
+            continue;
+          }
+          $this->configFactory()->getEditable($clone->getName())
+            ->set($clone->getKey(), implode($clone->getDelimiter() ?: '', $values))
             ->save();
         }
       }
@@ -78,26 +79,19 @@ final class SiteSettingsForm extends ContentEntityForm implements NeoNestedEntit
    * @param \Drupal\field\FieldConfigInterface $field
    *   The field config.
    *
-   * @return array|null
-   *   An array of name/key values.
+   * @return \Drupal\neo_site_settings\Event\SiteSettingsConfigCloneEvent|null
+   *   The dispatched event, which carries the resolved config name, key and
+   *   delimiter, or NULL when this field is not cloned anywhere.
    */
-  protected function getCloneDefinition(FieldConfigInterface $field): ?array {
-    $name = $field->getThirdPartySetting('neo_site_settings', 'config_name');
-    $key = $field->getThirdPartySetting('neo_site_settings', 'config_key');
-    $delimiter = $field->getThirdPartySetting('neo_site_settings', 'config_delimiter');
-    $event = new SiteSettingsConfigCloneEvent($field, $name, $key, $delimiter);
-    $event_dispatcher = \Drupal::service('event_dispatcher');
-    $event_dispatcher->dispatch($event, SiteSettingsConfigCloneEvent::EVENT_NAME);
-    $name = $event->getName();
-    $key = $event->getKey();
-    if (!$name || !$key) {
-      return NULL;
-    }
-    return [
-      'name' => $event->getName(),
-      'key' => $event->getKey(),
-      'delimiter' => $event->getDelimiter(),
-    ];
+  protected function getCloneDefinition(FieldConfigInterface $field): ?SiteSettingsConfigCloneEvent {
+    $event = new SiteSettingsConfigCloneEvent(
+      $field,
+      $field->getThirdPartySetting('neo_site_settings', 'config_name'),
+      $field->getThirdPartySetting('neo_site_settings', 'config_key'),
+      $field->getThirdPartySetting('neo_site_settings', 'config_delimiter'),
+    );
+    \Drupal::service('event_dispatcher')->dispatch($event, SiteSettingsConfigCloneEvent::EVENT_NAME);
+    return $event->isEmpty() ? NULL : $event;
   }
 
 }

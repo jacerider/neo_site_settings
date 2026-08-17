@@ -59,7 +59,9 @@ final class SiteSettings extends ContentEntityBase implements SiteSettingsInterf
    * {@inheritdoc}
    */
   public function label() {
-    return $this->bundle->entity->label();
+    // The bundle config entity can be gone while a settings row still refers to
+    // it, so fall back to the machine id rather than fataling on NULL.
+    return $this->bundle->entity?->label() ?? (string) $this->id();
   }
 
   /**

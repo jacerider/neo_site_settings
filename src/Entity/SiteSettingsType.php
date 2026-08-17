@@ -104,11 +104,16 @@ final class SiteSettingsType extends ConfigEntityBundleBase implements SiteSetti
    */
   public static function preDelete(EntityStorageInterface $storage, array $entities) {
     parent::preDelete($storage, $entities);
-    foreach ($entities as $entity) {
-      $neo_site_settings = \Drupal::service('entity_type.manager')->getStorage('neo_site_settings')->loadByType($entity->id());
-      if ($neo_site_settings) {
-        $neo_site_settings->delete();
-      }
+    // Delete by bundle rather than by id: the two are independent columns, so
+    // selecting by id would leave behind any row whose id was remapped, and
+    // that row's bundle would then point at a type that no longer exists.
+    $settings_storage = \Drupal::entityTypeManager()->getStorage('neo_site_settings');
+    $ids = $settings_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('bundle', array_keys($entities), 'IN')
+      ->execute();
+    if ($ids) {
+      $settings_storage->delete($settings_storage->loadMultiple($ids));
     }
   }
 

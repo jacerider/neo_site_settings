@@ -78,10 +78,6 @@ class SiteSettingsFieldBlock extends BlockBase implements BlockPluginInterface, 
     $settings = parent::defaultConfiguration();
     $settings['site_settings_fields'] = [];
     $settings['site_settings_view_mode'] = '';
-    // Set custom cache settings.
-    if (isset($this->pluginDefinition['cache'])) {
-      $settings['cache'] = $this->pluginDefinition['cache'];
-    }
     return $settings;
   }
 
@@ -130,14 +126,19 @@ class SiteSettingsFieldBlock extends BlockBase implements BlockPluginInterface, 
       ],
     ];
 
-    $options = array_merge(array_flip($config['site_settings_fields']), $this->getFieldOptions());
-    foreach ($options as $key => $label) {
+    // Saved fields first, in their saved order, then everything else. A saved
+    // key whose field no longer exists is dropped rather than listed with its
+    // position index as its label, which also lets it fall out of config on the
+    // next save instead of being written back unchanged.
+    $available = $this->getFieldOptions();
+    $selected = array_intersect($config['site_settings_fields'], array_keys($available));
+    foreach (array_unique(array_merge($selected, array_keys($available))) as $key) {
       $form['site_settings_fields'][$key]['#attributes']['class'][] = 'draggable';
       $form['site_settings_fields'][$key]['status'] = [
         '#type' => 'checkbox',
         '#default_value' => in_array($key, $config['site_settings_fields']),
       ];
-      $form['site_settings_fields'][$key]['label']['#markup'] = $label;
+      $form['site_settings_fields'][$key]['label']['#markup'] = $available[$key];
     }
 
     return $form;
@@ -178,8 +179,9 @@ class SiteSettingsFieldBlock extends BlockBase implements BlockPluginInterface, 
   public function build() {
     $build = [];
     $config = $this->getConfiguration();
-    foreach ($config['site_settings_fields'] as $weight => $key) {
-      [$type_id, $field_name] = explode('.', $key);
+    $weight = 0;
+    foreach ($this->getSelections() as $key => [$type_id, $field_name]) {
+      $weight++;
       $neo_site_settings = SiteSettings::load($type_id);
       if ($neo_site_settings && $neo_site_settings->hasField($field_name) && !$neo_site_settings->get($field_name)->isEmpty()) {
         $build[$key] = $neo_site_settings->get($field_name)->view($config['site_settings_view_mode']);
@@ -194,16 +196,33 @@ class SiteSettingsFieldBlock extends BlockBase implements BlockPluginInterface, 
    * {@inheritdoc}
    */
   public function getCacheTags() {
-    $tags = [];
-    $config = $this->getConfiguration();
-    foreach ($config['site_settings_fields'] as $key) {
-      [$type_id, $field_name] = explode('.', $key);
-      $neo_site_settings = SiteSettings::load($type_id);
-      if ($neo_site_settings && $neo_site_settings->hasField($field_name) && !$neo_site_settings->get($field_name)->isEmpty()) {
-        $tags = Cache::mergeTags($tags, $neo_site_settings->getCacheTags());
-      }
+    // Derive the tags from configuration, not from whether each field currently
+    // holds a value: a settings entity that has not been saved yet contributes
+    // no tags of its own, which would cache this block permanently and never
+    // invalidate it once the entity is created or the field filled in.
+    $tags = parent::getCacheTags();
+    foreach ($this->getSelections() as [$type_id]) {
+      $tags = Cache::mergeTags($tags, ['neo_site_settings_list:' . $type_id]);
     }
     return $tags;
+  }
+
+  /**
+   * Splits the stored "<bundle>.<field>" selections into their two parts.
+   *
+   * @return array[]
+   *   A [$bundle, $field_name] pair per well-formed selection. Malformed keys
+   *   are skipped rather than emitting an undefined index.
+   */
+  protected function getSelections(): array {
+    $selections = [];
+    foreach ($this->getConfiguration()['site_settings_fields'] as $key) {
+      $parts = explode('.', $key);
+      if (count($parts) === 2) {
+        $selections[$key] = $parts;
+      }
+    }
+    return $selections;
   }
 
 }

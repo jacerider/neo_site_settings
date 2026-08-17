@@ -4,6 +4,7 @@ namespace Drupal\neo_site_settings\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
@@ -63,11 +64,16 @@ class SiteSettingsBlock extends BlockBase implements BlockPluginInterface, Conta
    */
   public function getCacheTags() {
     $config = $this->getConfiguration();
-    if (!empty($config['site_settings_type'])) {
-      $site_settings = SiteSettings::load($config['site_settings_type']);
-      return $site_settings ? $site_settings->getCacheTags() : [];
+    if (empty($config['site_settings_type'])) {
+      return parent::getCacheTags();
     }
-    return [];
+    // Derive the tag from configuration, not from whether the entity exists: a
+    // settings entity that has not been saved yet contributes no tags of its
+    // own, which would cache this block permanently and never invalidate it
+    // once the entity is created.
+    return Cache::mergeTags(parent::getCacheTags(), [
+      'neo_site_settings_list:' . $config['site_settings_type'],
+    ]);
   }
 
   /**
@@ -93,10 +99,6 @@ class SiteSettingsBlock extends BlockBase implements BlockPluginInterface, Conta
     $settings = parent::defaultConfiguration();
     $settings['site_settings_type'] = '';
     $settings['site_settings_view_mode'] = '';
-    // Set custom cache settings.
-    if (isset($this->pluginDefinition['cache'])) {
-      $settings['cache'] = $this->pluginDefinition['cache'];
-    }
     return $settings;
   }
 

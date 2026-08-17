@@ -1,6 +1,6 @@
 field.field.*.*.*.third_party.neo_site_settings:
   type: mapping
-  label: 'Shortcut settings'
+  label: 'Settings clone'
   mapping:
     config_name:
       type: string
@@ -35,6 +35,11 @@ neo_site_settings.neo_site_settings_type.*:
 block.settings.neo_site_settings:
   type: block_settings
   label: 'Site Settings block'
+  # block_settings is deliberately not fully validatable; core requires each
+  # block.settings.* to declare it, and defining this key replaces core's
+  # catch-all block.settings.* which does.
+  constraints:
+    FullyValidatable: ~
   mapping:
     site_settings_type:
       type: string
@@ -46,6 +51,9 @@ block.settings.neo_site_settings:
 block.settings.neo_site_settings_field:
   type: block_settings
   label: 'Site Settings fields block'
+  # See the note on block.settings.neo_site_settings above.
+  constraints:
+    FullyValidatable: ~
   mapping:
     site_settings_fields:
       type: sequence
