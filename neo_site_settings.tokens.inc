@@ -188,7 +188,10 @@ function neo_site_settings_address_parse($address) {
   // lead with a company or recipient line.
   $streetIndex = NULL;
   foreach ($parts as $index => $part) {
-    if (preg_match('/^(\d+\w*)\s+(.+?)(?:\s+(apt|unit|suite|ste|#)\s*(.+))?$/i', $part, $matches)) {
+    // The house number allows hyphens and slashes so that "123-A Main St" and
+    // Queens-style "123-45 Main St" keep their number instead of failing the
+    // match outright and losing the street entirely.
+    if (preg_match('/^(\d+[\w\-\/]*)\s+(.+?)(?:\s+(apt|unit|suite|ste|#)\s*(.+))?$/i', $part, $matches)) {
       $result['street_number'] = $matches[1];
       $result['street_name'] = $matches[2];
       if (isset($matches[4]) && $matches[4] !== '') {
