@@ -163,10 +163,11 @@ final class SiteSettingsValue extends ComponentValuePluginBase implements Contai
       /** @var \Drupal\neo_site_settings\SiteSettingsStorage $storage */
       $storage = $this->entityTypeManager->getStorage('neo_site_settings');
       $entity = $storage->loadOrCreateByType($bundleId);
-      if ($entity) {
-        $this->shape->addCacheableDependency($entity);
-        return $this->getChildrenMatchValues($this->shape, [$entity], $this->configuration);
-      }
+      // Use the bundle list tag, not the entity tag: an unsaved settings
+      // entity is new, and a new entity contributes no cache tags at all.
+      $this->shape->getCacheableMetadata()
+        ->addCacheTags(['neo_site_settings_list:' . $bundleId]);
+      return $this->getChildrenMatchValues($this->shape, [$entity], $this->configuration);
     }
     // Can't act: pass the threaded value through rather than wiping it to NULL.
     return $value;

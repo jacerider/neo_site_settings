@@ -248,12 +248,12 @@ final class SiteSettingsFallbackMediaValue extends ComponentValuePluginBase impl
     /** @var \Drupal\neo_site_settings\SiteSettingsStorage $storage */
     $storage = $this->entityTypeManager->getStorage('neo_site_settings');
     $entity = $storage->loadOrCreateByType($bundleId);
-    if (!$entity) {
-      return $value;
-    }
 
-    // Re-render whenever the settings entity changes.
-    $this->shape->addCacheableDependency($entity);
+    // Re-render whenever the settings entity changes. Use the bundle list
+    // tag, not the entity tag: an unsaved settings entity is new, and a new
+    // entity contributes no cache tags at all.
+    $this->shape->getCacheableMetadata()
+      ->addCacheTags(['neo_site_settings_list:' . $bundleId]);
 
     if (!$entity->hasField($field) || $entity->get($field)->isEmpty()) {
       return $value;

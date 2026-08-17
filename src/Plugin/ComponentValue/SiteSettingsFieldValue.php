@@ -205,25 +205,21 @@ final class SiteSettingsFieldValue extends ComponentValuePluginBase implements C
     /** @var \Drupal\neo_site_settings\SiteSettingsStorage $storage */
     $storage = $this->entityTypeManager->getStorage('neo_site_settings');
     $entity = $storage->loadOrCreateByType($bundleId);
-    if (!$entity) {
-      return $value;
-    }
 
-    // Re-render whenever the settings entity changes.
-    $this->shape->addCacheableDependency($entity);
+    // Re-render whenever the settings entity changes. Use the bundle list
+    // tag, not the entity tag: an unsaved settings entity is new, and a new
+    // entity contributes no cache tags at all.
+    $this->shape->getCacheableMetadata()
+      ->addCacheTags(['neo_site_settings_list:' . $bundleId]);
 
-    $result = !empty($this->configuration['render'])
+    // Return what this provider produced, empty or not. The pipeline decides
+    // precedence: an empty result that does not claim leaves the threaded
+    // value intact, so a lower-weighted provider can still win. Returning
+    // $value here instead would claim the example as if it were a real value
+    // and halt the search.
+    return !empty($this->configuration['render'])
       ? $this->renderFieldValue($entity, $field)
       : $this->rawFieldValue($entity, $field);
-
-    if (!empty($result)) {
-      // Make the Site Settings value authoritative over lower-weighted
-      // providers such as the weight-1000 "default" provider. When the field
-      // is empty we return the incoming value so a configured default can win.
-      return $result;
-    }
-
-    return $value;
   }
 
   /**
