@@ -50,54 +50,68 @@ function neo_site_settings_token_info_alter(&$data) {
  */
 function neo_site_settings_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $replacements = [];
-  if ($type === 'site') {
-    $cache = &drupal_static(__FUNCTION__);
-    foreach ($tokens as $name => $original) {
-      if (isset($cache[$original])) {
-        $replacements[$original] = $cache[$original];
-        continue;
-      }
-      $params = explode(':', $name);
-      $name = array_shift($params);
-      $op = array_shift($params);
-      switch ($name) {
-        case 'phone':
-          /** @var \Drupal\neo_site_settings\SiteSettingsStorage $storage */
-          $storage = \Drupal::entityTypeManager()->getStorage('neo_site_settings');
-          $settings = $storage->loadByType('general');
-          if ($settings) {
-            $bubbleable_metadata->addCacheableDependency($settings);
-            if ($settings->hasField('field_phone') && !$settings->get('field_phone')->isEmpty()) {
-              $replacements[$original] = $settings->get('field_phone')->value;
-            }
-          }
-          break;
+  if ($type !== 'site') {
+    return $replacements;
+  }
 
-        case 'address':
-          /** @var \Drupal\neo_site_settings\SiteSettingsStorage $storage */
-          $storage = \Drupal::entityTypeManager()->getStorage('neo_site_settings');
-          $settings = $storage->loadByType('general');
-          if ($settings) {
-            $bubbleable_metadata->addCacheableDependency($settings);
-            if ($settings->hasField('field_address') && !$settings->get('field_address')->isEmpty()) {
-              $addressString = $settings->get('field_address')->value;
-              $addressParts = neo_site_settings_address_parse($addressString);
-              $replacements[$original] = match($op) {
-                'street_1' => $addressParts['street_number'] . ' ' . $addressParts['street_name'],
-                'street_2' => $addressParts['unit'] ? ', ' . $addressParts['unit'] : '',
-                'city' => $addressParts['city'],
-                'state' => $addressParts['state'],
-                'zip' => $addressParts['zip'],
-                'country' => $addressParts['country'],
-                default => implode(', ', array_map('trim', explode("\n", $addressString))),
-              };
-              $cache[$original] = $replacements[$original];
-            }
-          }
-          break;
-      }
+  // Only act when a token this module actually provides is present, so that an
+  // unrelated site token such as [site:name] does not pick up a dependency on
+  // the settings entity.
+  $handled = FALSE;
+  foreach (array_keys($tokens) as $tokenName) {
+    if (in_array(strtok($tokenName, ':'), ['phone', 'address'], TRUE)) {
+      $handled = TRUE;
+      break;
     }
   }
+  if (!$handled) {
+    return $replacements;
+  }
+
+  /** @var \Drupal\neo_site_settings\SiteSettingsStorage $storage */
+  $storage = \Drupal::entityTypeManager()->getStorage('neo_site_settings');
+  $settings = $storage->loadByType('general');
+  if (!$settings) {
+    return $replacements;
+  }
+
+  // Register the dependency once, and unconditionally: a field that is empty
+  // now must still invalidate these tokens when it is filled in later.
+  $bubbleable_metadata->addCacheableDependency($settings);
+
+  // Parse the address a single time, not once per address token.
+  $addressString = $settings->hasField('field_address') && !$settings->get('field_address')->isEmpty()
+    ? $settings->get('field_address')->value
+    : NULL;
+  $addressParts = $addressString !== NULL ? neo_site_settings_address_parse($addressString) : NULL;
+
+  foreach ($tokens as $name => $original) {
+    $params = explode(':', $name);
+    $name = array_shift($params);
+    $op = array_shift($params);
+    switch ($name) {
+      case 'phone':
+        if ($settings->hasField('field_phone') && !$settings->get('field_phone')->isEmpty()) {
+          $replacements[$original] = $settings->get('field_phone')->value;
+        }
+        break;
+
+      case 'address':
+        if ($addressParts !== NULL) {
+          $replacements[$original] = match($op) {
+            'street_1' => $addressParts['street_number'] . ' ' . $addressParts['street_name'],
+            'street_2' => $addressParts['unit'] ? ', ' . $addressParts['unit'] : '',
+            'city' => $addressParts['city'],
+            'state' => $addressParts['state'],
+            'zip' => $addressParts['zip'],
+            'country' => $addressParts['country'],
+            default => implode(', ', array_map('trim', explode("\n", $addressString))),
+          };
+        }
+        break;
+    }
+  }
+
   return $replacements;
 }
 
@@ -122,10 +136,14 @@ function neo_site_settings_tokens($type, $tokens, array $data, array $options, B
  *   - street_name: The street name portion of the address.
  *   - unit: The unit, apartment, or suite number if available.
  *   - city: The city name.
- *   - state: The state abbreviation (2 letters).
+ *   - state: The state abbreviation (2 letters), upper-cased.
  *   - zip: The ZIP code (5 digits, optionally with 4-digit extension).
- *   - country: The country name (not currently parsed).
- *   Empty values are removed from the returned array.
+ *   - country: Always an empty string. No parse branch populates it; the key
+ *     exists so that the [site:address:country] token resolves to empty rather
+ *     than falling through to the whole address.
+ *   All seven keys are always present. Parsing is best effort: any component
+ *   the input does not match is returned as an empty string, so an unrecognised
+ *   address yields an all-empty result rather than an error.
  */
 function neo_site_settings_address_parse($address) {
   $lines = array_map('trim', explode("\n", trim($address)));
@@ -153,10 +171,11 @@ function neo_site_settings_address_parse($address) {
       }
     }
 
-    // Parse city, state, zip line.
-    if (preg_match('/^(.+?),?\s+([A-Z]{2})\s+(\d{5}(?:-\d{4})?)/', $lastLine, $matches)) {
+    // Parse city, state, zip line. Case-insensitive so that a lower-cased
+    // state ("il 62704") still yields a state and a ZIP.
+    if (preg_match('/^(.+?),?\s+([A-Z]{2})\s+(\d{5}(?:-\d{4})?)/i', $lastLine, $matches)) {
       $result['city'] = trim($matches[1], ', ');
-      $result['state'] = $matches[2];
+      $result['state'] = strtoupper($matches[2]);
       $result['zip'] = $matches[3];
     }
   }
@@ -173,9 +192,9 @@ function neo_site_settings_address_parse($address) {
       // City.
       $result['city'] = $parts[1];
 
-      // State and ZIP.
-      if (preg_match('/([A-Z]{2})\s+(\d{5}(?:-\d{4})?)/', $parts[2], $matches)) {
-        $result['state'] = $matches[1];
+      // State and ZIP. Case-insensitive, as above.
+      if (preg_match('/([A-Z]{2})\s+(\d{5}(?:-\d{4})?)/i', $parts[2], $matches)) {
+        $result['state'] = strtoupper($matches[1]);
         $result['zip'] = $matches[2];
       }
     }
