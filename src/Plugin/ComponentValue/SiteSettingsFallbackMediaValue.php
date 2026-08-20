@@ -17,6 +17,7 @@ use Drupal\neo_alchemist\Attribute\ComponentValue;
 use Drupal\neo_alchemist\ComponentShapeMediaPluginInterface;
 use Drupal\neo_alchemist\ComponentShapePluginInterface;
 use Drupal\neo_alchemist\ComponentValuePluginBase;
+use Drupal\neo_alchemist\ComponentValueProvision;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -225,24 +226,29 @@ final class SiteSettingsFallbackMediaValue extends ComponentValuePluginBase impl
 
   /**
    * {@inheritdoc}
+   *
+   * Every path that cannot supply a fallback offers the threaded value back
+   * untouched, which is how this provider abstains. The one path that does
+   * supply one claims it, so the fallback outranks the weight-1000 "default"
+   * provider that would otherwise put the component's example back.
    */
-  public function provideDefaultValue(mixed $value): mixed {
+  public function provide(mixed $value): ComponentValueProvision {
     $shape = $this->shape;
     if (!$shape instanceof ComponentShapeMediaPluginInterface) {
-      return $value;
+      return ComponentValueProvision::offer($value);
     }
 
     // Only fill when nothing real is present. isProvidedValueEmpty() ignores
     // the "size" key the media_image_size modifier seeds, so an otherwise-empty
     // media value still triggers the fallback.
     if (!$this->shape->isProvidedValueEmpty($value)) {
-      return $value;
+      return ComponentValueProvision::offer($value);
     }
 
     $bundleId = $this->configuration['bundle'];
     $field = $this->configuration['field'];
     if (!$bundleId || !$field) {
-      return $value;
+      return ComponentValueProvision::offer($value);
     }
 
     /** @var \Drupal\neo_site_settings\SiteSettingsStorage $storage */
@@ -256,12 +262,12 @@ final class SiteSettingsFallbackMediaValue extends ComponentValuePluginBase impl
       ->addCacheTags(['neo_site_settings_list:' . $bundleId]);
 
     if (!$entity->hasField($field) || $entity->get($field)->isEmpty()) {
-      return $value;
+      return ComponentValueProvision::offer($value);
     }
 
     $media = $entity->get($field)->entity;
     if (!$media instanceof MediaInterface) {
-      return $value;
+      return ComponentValueProvision::offer($value);
     }
 
     // Re-render whenever the fallback media changes.
@@ -271,11 +277,17 @@ final class SiteSettingsFallbackMediaValue extends ComponentValuePluginBase impl
     if (!empty($mediaValue)) {
       // Make the fallback authoritative over lower-weighted providers such as
       // the weight-1000 "default" provider.
-      $this->stopFurtherProcessing();
-      return $mediaValue;
+      return ComponentValueProvision::claim($mediaValue);
     }
 
-    return $value;
+    return ComponentValueProvision::offer($value);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function provideDefaultValue(mixed $value): mixed {
+    return $this->provide($value)->getValue();
   }
 
 }
