@@ -16,11 +16,11 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\neo_alchemist\Attribute\ComponentValue;
 use Drupal\neo_alchemist\ComponentPropRenderable;
-use Drupal\neo_alchemist\ComponentShapePluginInterface;
-use Drupal\neo_alchemist\ComponentValuePluginBase;
-use Drupal\neo_alchemist\ComponentValueProcessingModeInterface;
-use Drupal\neo_alchemist\MatcherField;
+use Drupal\neo_alchemist\Match\MatcherField;
 use Drupal\neo_alchemist\Plugin\ComponentValue\ComponentValueProcessingModeTrait;
+use Drupal\neo_alchemist\Shape\ComponentShapePluginInterface;
+use Drupal\neo_alchemist\Value\ComponentValuePluginBase;
+use Drupal\neo_alchemist\Value\ComponentValueProcessingModeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -57,7 +57,7 @@ final class SiteSettingsFieldValue extends ComponentValuePluginBase implements C
   /**
    * The field matcher.
    *
-   * @var \Drupal\neo_alchemist\MatcherField
+   * @var \Drupal\neo_alchemist\Match\MatcherField
    */
   protected MatcherField $matcherField;
 
