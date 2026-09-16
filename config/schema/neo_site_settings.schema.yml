@@ -80,6 +80,25 @@ neo_alchemist.neo_component_value.site_settings:
       type: string
       label: 'Processing mode'
 
+neo_alchemist.neo_component_value.site_settings_reference:
+  type: mapping
+  label: 'Site Settings reference value provider'
+  mapping:
+    bundle:
+      type: string
+      label: 'Site Settings bundle'
+    reference:
+      type: string
+      label: 'Reference field'
+    shape_fields:
+      type: neo_alchemist.neo_component_shape_fields
+    shape_published:
+      type: boolean
+      label: Shape published
+    processing_mode:
+      type: string
+      label: 'Processing mode'
+
 neo_alchemist.neo_component_value.site_settings_links:
   type: mapping
   label: 'Site Settings links value provider'
