@@ -1,0 +1,9 @@
+{#
+  Minimal on purpose. The suite asserts against Component::getPropValues(),
+  not markup.
+#}
+<div{{ attributes }}>
+  {% for item in items %}
+    <span class="nss-item" data-title="{{ item.title }}" data-src="{{ item.image.src }}"></span>
+  {% endfor %}
+</div>

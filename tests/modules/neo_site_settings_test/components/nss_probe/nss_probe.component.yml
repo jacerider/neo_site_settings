@@ -1,0 +1,65 @@
+$schema: 'https://git.drupalcode.org/project/drupal/-/raw/10.1.x/core/modules/sdc/src/metadata.schema.json'
+name: 'NSS provider probe fixture'
+description: >
+  One component carrying the three prop kinds the Site Settings providers bind
+  to, so a test states only the prop it cares about and leaves the rest on
+  their examples.
+
+  Every child is OPTIONAL on purpose. A required child that resolves empty
+  drops its whole item, which would make "the provider returned nothing" and
+  "the provider returned rows whose mapping missed" indistinguishable — the
+  exact confusion these tests exist to tell apart.
+
+  The examples are deliberately loud: an assertion that sees EXAMPLE_ is
+  reading the SDC's scaffolding, which for a blocking provider is a failure
+  rather than a fallback.
+status: stable
+neo: true
+props:
+  type: object
+  properties:
+    heading:
+      type: string
+      title: Heading
+      examples:
+        - 'EXAMPLE_HEADING'
+    items:
+      type: array
+      title: Items
+      examples:
+        -
+          title: 'EXAMPLE_ITEM_TITLE_0'
+          note: 'EXAMPLE_ITEM_NOTE_0'
+        -
+          title: 'EXAMPLE_ITEM_TITLE_1'
+          note: 'EXAMPLE_ITEM_NOTE_1'
+      items:
+        type: object
+        title: Item
+        properties:
+          title:
+            type: string
+            title: Title
+            examples: 'EXAMPLE_TITLE'
+          note:
+            type: string
+            title: Note
+            examples: 'EXAMPLE_NOTE'
+    links:
+      type: menu
+      title: Links
+    box:
+      type: object
+      title: Box
+      examples:
+        title: 'EXAMPLE_BOX_TITLE'
+        note: 'EXAMPLE_BOX_NOTE'
+      properties:
+        title:
+          type: string
+          title: Title
+          examples: 'EXAMPLE_BOX_TITLE'
+        note:
+          type: string
+          title: Note
+          examples: 'EXAMPLE_BOX_NOTE'

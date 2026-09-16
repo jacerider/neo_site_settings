@@ -1,0 +1,14 @@
+{#
+  Minimal on purpose. The suite asserts against Component::getPropValues(),
+  not markup.
+#}
+<div{{ attributes }}>
+  <h2>{{ heading }}</h2>
+  <p data-box-title="{{ box.title }}">{{ box.note }}</p>
+  {% for link in links %}
+    <a class="nss-link" href="{{ link.url.uri }}">{{ link.title }}</a>
+  {% endfor %}
+  {% for item in items %}
+    <span class="nss-item" data-title="{{ item.title }}">{{ item.note }}</span>
+  {% endfor %}
+</div>

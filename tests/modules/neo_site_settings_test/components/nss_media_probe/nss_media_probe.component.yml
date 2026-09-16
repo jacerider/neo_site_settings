@@ -1,0 +1,33 @@
+$schema: 'https://git.drupalcode.org/project/drupal/-/raw/10.1.x/core/modules/sdc/src/metadata.schema.json'
+name: 'NSS media probe fixture'
+description: >
+  A list whose item carries a media-capable image child, which is the shape the
+  Site Settings media fallback is actually wired into: a curated or queried
+  list where SOME entities left their image field blank.
+
+  Separate from nss_probe on purpose. An `image` child attaches Alchemist's
+  `media` provider, and that provider needs the media entity type — so folding
+  this into the shared fixture would force every unrelated provider test to
+  enable the media module or fail on a missing entity type.
+status: stable
+neo: true
+props:
+  type: object
+  properties:
+    items:
+      type: array
+      title: Items
+      examples:
+        -
+          title: 'EXAMPLE_ITEM_TITLE_0'
+      items:
+        type: object
+        title: Item
+        properties:
+          title:
+            type: string
+            title: Title
+            examples: 'EXAMPLE_TITLE'
+          image:
+            type: image
+            title: Image

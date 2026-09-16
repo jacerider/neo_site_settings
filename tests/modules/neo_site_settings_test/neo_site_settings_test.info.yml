@@ -1,0 +1,16 @@
+name: 'Neo Site Settings test fixtures'
+type: module
+description: 'Purpose-built SDCs for the neo_site_settings value-provider tests.'
+package: Testing
+
+# `package: Testing` exempts this from core_version_requirement (see the same
+# note in neo_alchemist_test): pinning a range would let the fixture silently
+# fall out of compatibility, and the tests would stop being discovered rather
+# than fail — the worst way to lose coverage.
+#
+# neo_alchemist is a dependency here but NOT of the parent module: the four
+# value providers are a soft integration that only exists when Alchemist is
+# installed, so the fixture that exercises them is where the dependency belongs.
+dependencies:
+  - neo_alchemist:neo_alchemist
+  - neo_site_settings:neo_site_settings

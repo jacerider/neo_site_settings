@@ -45,6 +45,12 @@ final class SiteSettingsCloneTest extends KernelTestBase {
     'field',
     'link',
     'telephone',
+    // Neo registers neo.linkit_resolver, which injects path_alias.manager and
+    // the linkit substitution plugin manager. Neither exists unless its module
+    // is enabled, and the container then fails to compile before a single test
+    // method runs.
+    'path_alias',
+    'linkit',
     'neo',
     'neo_site_settings',
   ];
