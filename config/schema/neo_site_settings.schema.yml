@@ -65,23 +65,15 @@ block.settings.neo_site_settings_field:
       label: 'View Mode'
 
 neo_alchemist.neo_component_value.site_settings:
-  type: mapping
+  type: neo_alchemist.children_match_value
   label: 'Site Settings value provider'
   mapping:
     bundle:
       type: string
       label: 'Site Settings bundle'
-    shape_fields:
-      type: neo_alchemist.neo_component_shape_fields
-    shape_published:
-      type: boolean
-      label: Shape published
-    processing_mode:
-      type: string
-      label: 'Processing mode'
 
 neo_alchemist.neo_component_value.site_settings_reference:
-  type: mapping
+  type: neo_alchemist.children_match_value
   label: 'Site Settings reference value provider'
   mapping:
     bundle:
@@ -90,14 +82,6 @@ neo_alchemist.neo_component_value.site_settings_reference:
     reference:
       type: string
       label: 'Reference field'
-    shape_fields:
-      type: neo_alchemist.neo_component_shape_fields
-    shape_published:
-      type: boolean
-      label: Shape published
-    processing_mode:
-      type: string
-      label: 'Processing mode'
 
 neo_alchemist.neo_component_value.site_settings_links:
   type: mapping
