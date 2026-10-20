@@ -19,5 +19,8 @@
   "require": {
     "drupal/core": "^10.3 || ^11",
     "jacerider/neo": "^1"
+  },
+  "conflict": {
+    "jacerider/neo_alchemist": "<1.3.5"
   }
 }
